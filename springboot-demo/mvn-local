@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")"
+# Maven otherwise selects Homebrew Java 26 on this machine; use installed Java 22.
+if [ -x /usr/libexec/java_home ]; then
+    if interview_java_home=$(/usr/libexec/java_home -v 22 2>/dev/null); then
+        export JAVA_HOME="$interview_java_home"
+    fi
+fi
+exec mvn -Dmaven.repo.local="$PWD/.maven-repository" "$@"
